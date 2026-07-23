@@ -665,7 +665,7 @@ class GetReadyApp(TextualApp):
 
                 cmds = build_install_commands(mgr, apps)
 
-                if mgr == "winget":
+                if len(cmds) == len(apps):
                     for app, cmd in zip(apps, cmds):
                         print(f"\n-- {app.name} --")
                         print(f"$ {' '.join(cmd)}")

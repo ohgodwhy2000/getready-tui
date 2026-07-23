@@ -79,9 +79,9 @@ def get_update_command(manager: str) -> list[str] | None:
 
 
 def build_install_commands(manager: str, installable: list[App]) -> list[list[str]]:
-    """Return a list of commands to run, in order. winget is installed
-    one app at a time (more reliable exact-id matches); the others
-    batch every package into a single invocation."""
+    """Return a list of commands to run, in order.  apt and winget install
+    one app at a time so that a missing package does not block the rest;
+    the others batch every package into a single invocation."""
     pkg_ids = [
         app.package_for(manager) for app in installable if app.package_for(manager)
     ]
@@ -99,10 +99,10 @@ def build_install_commands(manager: str, installable: list[App]) -> list[list[st
             ]
             for pkg in pkg_ids
         ]
+    if manager == "apt":
+        return [["sudo", "apt", "install", "-y", pkg] for pkg in pkg_ids]
     if manager == "choco":
         return [["choco", "install", "-y", *pkg_ids]]
-    if manager == "apt":
-        return [["sudo", "apt", "install", "-y", *pkg_ids]]
     if manager == "dnf":
         return [["sudo", "dnf", "install", "-y", *pkg_ids]]
     if manager == "pacman":
