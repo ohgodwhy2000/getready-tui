@@ -78,38 +78,60 @@ def get_update_command(manager: str) -> list[str] | None:
     return UPDATE_COMMANDS.get(manager)
 
 
-def build_install_commands(manager: str, installable: list[App]) -> list[list[str]]:
-    """Return a list of commands to run, in order. winget is installed
-    one app at a time (more reliable exact-id matches); the others
-    batch every package into a single invocation."""
-    pkg_ids = [
-        app.package_for(manager) for app in installable if app.package_for(manager)
+def build_install_commands(
+    manager: str, installable: list[App]
+) -> list[tuple[App, list[str]]]:
+    """Return ``(app, command)`` pairs to run, in order.
+
+    *apt* and *winget* install one app at a time so that a missing
+    package does not block the rest; the others batch every package
+    into a single invocation (all apps in the batch share the same
+    command object).  Apps without a package ID for *manager* are
+    silently omitted — callers must not attribute results to them.
+    """
+    pkg_map = [
+        (app, app.package_for(manager))
+        for app in installable
+        if app.package_for(manager)
     ]
 
     if manager == "winget":
         return [
-            [
-                "winget",
-                "install",
-                "--id",
-                pkg,
-                "-e",
-                "--accept-source-agreements",
-                "--accept-package-agreements",
-            ]
-            for pkg in pkg_ids
+            (
+                app,
+                [
+                    "winget",
+                    "install",
+                    "--id",
+                    pkg,
+                    "-e",
+                    "--accept-source-agreements",
+                    "--accept-package-agreements",
+                ],
+            )
+            for app, pkg in pkg_map
         ]
-    if manager == "choco":
-        return [["choco", "install", "-y", *pkg_ids]]
     if manager == "apt":
-        return [["sudo", "apt", "install", "-y", *pkg_ids]]
-    if manager == "dnf":
-        return [["sudo", "dnf", "install", "-y", *pkg_ids]]
-    if manager == "pacman":
-        return [["sudo", "pacman", "-S", "--noconfirm", *pkg_ids]]
-    if manager == "flatpak":
-        return [["flatpak", "install", "-y", "flathub", *pkg_ids]]
-    return []
+        return [(app, ["sudo", "apt", "install", "-y", pkg]) for app, pkg in pkg_map]
+
+    # Batch managers — single command for every qualifying package.
+    pkg_ids = [pkg for _, pkg in pkg_map]
+    apps = [app for app, _ in pkg_map]
+    if not pkg_ids:
+        return []
+
+    if manager == "choco":
+        cmd = ["choco", "install", "-y", *pkg_ids]
+    elif manager == "dnf":
+        cmd = ["sudo", "dnf", "install", "-y", *pkg_ids]
+    elif manager == "pacman":
+        cmd = ["sudo", "pacman", "-S", "--noconfirm", *pkg_ids]
+    elif manager == "flatpak":
+        cmd = ["flatpak", "install", "-y", "flathub", *pkg_ids]
+    else:
+        return []
+
+    return [(app, cmd) for app in apps]
 
 
 def build_install_plan(
