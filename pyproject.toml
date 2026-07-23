@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "getready-tui"
+version = "0.1.0"
+description = "A terminal UI for batch-installing apps via apt, dnf, pacman, flatpak, winget, or chocolatey."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "GPL-3.0-only" }
+authors = [
+    { name = "ohgodwhy#2000" },
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Topic :: System :: Software Distribution",
+]
+dependencies = [
+    "textual>=0.58.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "textual-dev>=1.5.0",
+    "ruff>=0.11.0",
+]
+
+[project.scripts]
+getready = "getready_tui.app:run"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/getready_tui"]
+
+[tool.ruff]
+line-length = 88
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
