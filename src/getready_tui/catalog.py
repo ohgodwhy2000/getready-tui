@@ -133,7 +133,7 @@ CATALOG: dict[str, list[App]] = {
         ),
         App(
             "Telegram Desktop",
-            apt=None,
+            apt="telegram-desktop",
             dnf="telegram-desktop",
             pacman="telegram-desktop",
             flatpak="org.telegram.desktop",
@@ -623,7 +623,7 @@ CATALOG: dict[str, list[App]] = {
         ),
         App(
             "OpenShot",
-            apt=None,
+            apt="openshot-qt",
             dnf="openshot",
             pacman="openshot",
             flatpak=None,
@@ -1452,7 +1452,7 @@ CATALOG: dict[str, list[App]] = {
         ),
         App(
             "dust",
-            apt=None,
+            apt="du-dust",
             dnf=None,
             pacman="dust",
             flatpak=None,
