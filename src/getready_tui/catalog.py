@@ -104,7 +104,7 @@ CATALOG: dict[str, list[App]] = {
         ),
         App(
             "LibreWolf",
-            apt="librewolf",
+            apt=None,
             dnf=None,
             pacman="librewolf",
             flatpak="io.gitlab.librewolf-community",
@@ -623,7 +623,7 @@ CATALOG: dict[str, list[App]] = {
         ),
         App(
             "OpenShot",
-            apt="openshot",
+            apt="openshot-qt",
             dnf="openshot",
             pacman="openshot",
             flatpak=None,
@@ -969,7 +969,7 @@ CATALOG: dict[str, list[App]] = {
     "Gaming": [
         App(
             "Steam",
-            apt="steam",
+            apt="steam-installer",
             dnf="steam",
             pacman="steam",
             flatpak="com.valvesoftware.Steam",
@@ -1059,7 +1059,7 @@ CATALOG: dict[str, list[App]] = {
         ),
         App(
             "Prism Launcher",
-            apt="prismlauncher",
+            apt=None,
             dnf="prismlauncher",
             pacman="prismlauncher",
             flatpak=None,
@@ -1086,7 +1086,7 @@ CATALOG: dict[str, list[App]] = {
         ),
         App(
             "ProtonUp-Qt",
-            apt="protonup-qt",
+            apt=None,
             dnf=None,
             pacman="protonup-qt",
             flatpak="net.davidotek.pupgui2",
@@ -1160,7 +1160,7 @@ CATALOG: dict[str, list[App]] = {
         ),
         App(
             "OnlyOffice",
-            apt="onlyoffice-desktopeditors",
+            apt=None,
             dnf="onlyoffice-desktopeditors",
             pacman="onlyoffice-desktopeditors",
             flatpak="org.onlyoffice.desktopeditors",
@@ -1196,7 +1196,7 @@ CATALOG: dict[str, list[App]] = {
         ),
         App(
             "Cryptomator",
-            apt="cryptomator",
+            apt=None,
             dnf=None,
             pacman="cryptomator",
             flatpak="org.cryptomator.Cryptomator",
@@ -1243,7 +1243,7 @@ CATALOG: dict[str, list[App]] = {
         ),
         App(
             "VeraCrypt",
-            apt="veracrypt",
+            apt=None,
             dnf="veracrypt",
             pacman="veracrypt",
             flatpak=None,
@@ -1443,7 +1443,7 @@ CATALOG: dict[str, list[App]] = {
         ),
         App(
             "bottom (btm)",
-            apt="bottom",
+            apt=None,
             dnf="bottom",
             pacman="bottom",
             flatpak=None,
@@ -1452,7 +1452,7 @@ CATALOG: dict[str, list[App]] = {
         ),
         App(
             "dust",
-            apt="dust",
+            apt="du-dust",
             dnf=None,
             pacman="dust",
             flatpak=None,
