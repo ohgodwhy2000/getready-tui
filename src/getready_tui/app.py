@@ -665,21 +665,17 @@ class GetReadyApp(TextualApp):
 
                 cmds = build_install_commands(mgr, apps)
 
-                if len(cmds) == len(apps):
-                    for app, cmd in zip(apps, cmds):
+                # Run each unique command once; batch managers reuse the
+                # same command object for every app in the batch.
+                cmd_results: dict[int, bool] = {}
+                for app, cmd in cmds:
+                    cmd_id = id(cmd)
+                    if cmd_id not in cmd_results:
                         print(f"\n-- {app.name} --")
                         print(f"$ {' '.join(cmd)}")
                         proc = subprocess.run(cmd)
-                        results[app.name] = proc.returncode == 0
-                else:
-                    overall_ok = True
-                    for cmd in cmds:
-                        print(f"\n$ {' '.join(cmd)}")
-                        proc = subprocess.run(cmd)
-                        if proc.returncode != 0:
-                            overall_ok = False
-                    for app in apps:
-                        results[app.name] = overall_ok
+                        cmd_results[cmd_id] = proc.returncode == 0
+                    results[app.name] = cmd_results[cmd_id]
 
             print("\nDone. Press Enter to return to GetReady TUI...")
             input()
