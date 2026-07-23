@@ -26,7 +26,7 @@ MANAGER_NAMES: dict[str, str] = {
 UPDATE_COMMANDS: dict[str, list[str]] = {
     "apt": ["sudo", "apt", "update"],
     "dnf": ["sudo", "dnf", "check-update"],
-    "pacman": ["sudo", "pacman", "-Sy"],
+    "pacman": ["sudo", "pacman", "-Syu", "--noconfirm"],
 }
 
 # Native managers are preferred over flatpak; listed in a sensible

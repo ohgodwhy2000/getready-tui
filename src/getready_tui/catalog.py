@@ -398,7 +398,7 @@ CATALOG: dict[str, list[App]] = {
             "Java JDK (Temurin 21)",
             apt="default-jdk",
             dnf="java-latest-openjdk",
-            pacman="jre-openjdk",
+            pacman="jdk-openjdk",
             flatpak=None,
             winget="Microsoft.OpenJDK.21",
             choco="temurin21",

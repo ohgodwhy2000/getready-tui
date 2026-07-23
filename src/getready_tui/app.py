@@ -326,6 +326,7 @@ class GetReadyApp(TextualApp):
         self.available_managers = detect_available_managers()
         self.enabled_managers: list[str] = list(self.available_managers)
         self.apps_by_value: dict[str, CatalogApp] = {}
+        self._extra_apps: dict[str, CatalogApp] = {}
         self._custom_counter = 0
         self._search_term: str = ""
         self._selected_count: int = 0
@@ -387,6 +388,15 @@ class GetReadyApp(TextualApp):
                 else:
                     label = f"{app.name}  [dim](no package)[/dim]"
                 selections.append(Selection(label, app.name, False))
+        if self._extra_apps:
+            selections.append(
+                Selection("── Custom ──", "__header__Custom", False, disabled=True)
+            )
+            for name, app in self._extra_apps.items():
+                self.apps_by_value[name] = app
+                selections.append(
+                    Selection(f"{app.name}  [dim](custom)[/dim]", name, False)
+                )
         return selections
 
     def _build_filtered_selections(self) -> list[Selection]:
@@ -451,7 +461,7 @@ class GetReadyApp(TextualApp):
 
     # -- manager selection -------------------------------------------------
 
-    @on(Switch.Changed, "#manager-select")
+    @on(Switch.Changed, "[id^='mgr-']")
     def manager_toggled(self, event: Switch.Changed) -> None:
         # Extract manager id from the switch id ("mgr-apt" -> "apt")
         switch_id = event.switch.id
@@ -504,11 +514,9 @@ class GetReadyApp(TextualApp):
             if value in self.apps_by_value:
                 self._custom_counter += 1
                 value = f"{result.name} (custom {self._custom_counter})"
-            self.apps_by_value[value] = result
-            selection_list = self.query_one("#app-list", SelectionList)
-            selection_list.add_option(
-                Selection(f"{result.name}  [dim](custom)[/dim]", value, True)
-            )
+            result.name = value
+            self._extra_apps[value] = result
+            self._rebuild_selection_list()
             self.notify(f"Added custom app: {result.name}")
 
         self.push_screen(AddCustomAppScreen(self.enabled_managers), handle_result)
@@ -571,18 +579,18 @@ class GetReadyApp(TextualApp):
                 self.notify(f"Import failed: {e}", severity="error")
                 return
 
-            selection_list = self.query_one("#app-list", SelectionList)
             added = 0
+            catalog_names = {app.name for apps in CATALOG.values() for app in apps}
             for app in resolved:
-                value = app.name
-                if value not in self.apps_by_value:
-                    self.apps_by_value[value] = app
-                    label = (
-                        f"{app.name}  [dim](custom)[/dim]" if app.custom else app.name
-                    )
-                    selection_list.add_option(Selection(label, value, False))
+                if app.name not in catalog_names and app.name not in self._extra_apps:
+                    self._extra_apps[app.name] = app
                     added += 1
-                selection_list.select(value)
+
+            self._rebuild_selection_list()
+
+            selection_list = self.query_one("#app-list", SelectionList)
+            for app in resolved:
+                selection_list.select(app.name)
 
             for w in warnings:
                 self.log_line(f"[yellow]![/yellow] {w}")

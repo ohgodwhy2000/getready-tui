@@ -5,19 +5,26 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/ruff-action@v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/ruff-action@v4.0.0
 
   format:
     name: Format
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/ruff-action@v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/ruff-action@v4.0.0
         with:
           args: "format --check --diff"
