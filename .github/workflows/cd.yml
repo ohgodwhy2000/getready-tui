@@ -56,7 +56,7 @@ jobs:
           z = zipfile.ZipFile(whl)
           meta = [n for n in z.namelist() if n.endswith('METADATA')][0]
           content = z.read(meta).decode()
-          print(re.search(r'Version: (.+)', content).group(1).strip())
+          print(re.search(r'^Version:\s*(.+)$', content, re.MULTILINE).group(1).strip())
           ")
           if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
             echo "::error::Tag version ($TAG_VERSION) does not match package version ($PKG_VERSION)"
