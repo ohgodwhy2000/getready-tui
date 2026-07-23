@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "getready-tui"
-version = "0.1.1"
+version = "0.1.2"
 description = "A terminal UI for batch-installing apps via apt, dnf, pacman, flatpak, winget, or chocolatey."
 readme = "README.md"
 requires-python = ">=3.9"
