@@ -461,7 +461,7 @@ class GetReadyApp(TextualApp):
 
     # -- manager selection -------------------------------------------------
 
-    @on(Switch.Changed, "[id^='mgr-']")
+    @on(Switch.Changed)
     def manager_toggled(self, event: Switch.Changed) -> None:
         # Extract manager id from the switch id ("mgr-apt" -> "apt")
         switch_id = event.switch.id
